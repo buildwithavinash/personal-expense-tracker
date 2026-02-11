@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app">
+  <header class="app__header">
+    <h1>Personal Finance Dashboard</h1>
+  </header>
+
+  <main class="app__main">
+    
+    <!-- Expense Form -->
+    <section class="expense-form-section">
+         <h2>Add / Edit Expense</h2>
+
+  <form class="expense-form" autocomplete="off">
+    <input type="text" placeholder="Title" class="title-input"/>
+    <input type="number" placeholder="Amount" class="amount-input"/>
+    <select class="category-options">
+      <option value="">Select Category</option>
+      <option value="food">Food</option>
+      <option value="travel">Travel</option>
+      <option value="shopping">Shopping</option>
+      <option value="other">Other</option>
+    </select>
+
+    <button type="submit" class="btn btn-add">Add Expense</button>
+    <button type="button" class="btn btn-cancelEdit hidden">Cancel Edit</button>
+  </form>
+    </section>
+
+    <!-- Controls -->
+    <section class="controls-section">
+         <input type="text" placeholder="Search by title..." />
+
+  <select>
+    <option value="all">All Categories</option>
+    <option value="food">Food</option>
+    <option value="travel">Travel</option>
+    <option value="shopping">Shopping</option>
+    <option value="other">Other</option>
+  </select>
+
+  <select>
+    <option value="latest">Latest First</option>
+    <option value="oldest">Oldest First</option>
+    <option value="amount-high">Amount: High to Low</option>
+    <option value="amount-low">Amount: Low to High</option>
+  </select>
+    </section>
+
+    <!-- Stats -->
+    <section class="stats-section">
+        <div class="stat-card">
+    <h3>Total Expense</h3>
+    <p class="total__expense">₹0</p>
+  </div>
+
+  <div class="stat-card">
+    <h3>Highest Expense</h3>
+    <p class="highest__expense">₹0</p>
+  </div>
+
+    </section>
+
+    <!-- Expense List -->
+    <section class="expense-list-section">
+         <h2>Expenses</h2>
+
+  <ul class="expense-list">
+    <!-- dynamic items -->
+     <li class="expense-item">
+  <div class="expense-item__left">
+    <div class="expense-item__info">
+      <h3 class="expense-title">Grocery Shopping</h3>
+      <span class="expense-category category-food">Food</span>
+    </div>
+
+    <p class="expense-date">14 Jan 2026</p>
+  </div>
+
+  <div class="expense-item__right">
+    <p class="expense-amount">₹1200</p>
+
+    <div class="expense-actions">
+      <button class="btn btn-edit">Edit</button>
+      <button class="btn btn-delete">Delete</button>
+    </div>
+  </div>
+</li>
+
+  </ul>
+
+  <p class="empty-state">No expenses found.</p>
+    </section>
+
+  </main>
+</div>
+
+
+
+
+    <script src="app.js"></script>
+</body>
+</html>
