@@ -16,6 +16,7 @@ let highestExpense = document.querySelector(".highest__expense");
 let categoryFilter = document.querySelector(".category__filtering--type")
 let sortFilter = document.querySelector(".category__filtering--timeline");
 let searchInput = document.querySelector(".search__input")
+ let errMsg =  document.querySelector(".error__msg");
 
 let expenses = [
   {
@@ -34,6 +35,15 @@ let expenses = [
 expenseForm.addEventListener("submit", function (e) {
   e.preventDefault();
 
+  if(expenseTitleInput.value === "" || expenseAmountInp.value === "" || expenseCategory.value === ""){
+  
+   errMsg.classList.remove("hidden")
+
+   errMsg.textContent = "Please fill all the details";
+   return;
+  }else {
+     errMsg.classList.add("hidden")
+  }
   if (isEditMode) {
     let itemToEdit = expenses.find((ele) => {
       return ele.id === itemToEditID;
@@ -42,11 +52,6 @@ expenseForm.addEventListener("submit", function (e) {
     itemToEdit.title = expenseTitleInput.value.trim();
     itemToEdit.amount = parseFloat(expenseAmountInp.value);
     itemToEdit.category = expenseCategory.value;
-    itemToEdit.date = new Date().toLocaleDateString("en-GB", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-    });
 
     isEditMode = false;
     itemToEditID = null;
@@ -82,12 +87,24 @@ function render(expenses) {
     let li = document.createElement("li");
     li.classList.add("expense-item");
     li.dataset.id = exp.id;
+    let categoryType = exp.category.toLowerCase();
+    let categoryClass = null
+    if(categoryType === "food"){
+      categoryClass = "category-food";
+    }else if(categoryType === "travel"){
+      categoryClass = "category-travel";
+    }else if(categoryType === "shopping"){
+      categoryClass = "category-shopping";
+    }else if(categoryType === "other"){
+      categoryClass = "category-other";
+    }
+
 
     li.innerHTML = `
         <div class="expense-item__left">
     <div class="expense-item__info">
       <h3 class="expense-title">${exp.title}</h3>
-      <span class="expense-category category-food">${exp.category}</span>
+      <span class="expense-category ${categoryClass}">${exp.category}</span>
     </div>
 
     <p class="expense-date">${exp.date}</p>
@@ -106,12 +123,17 @@ function render(expenses) {
     expenseList.append(li);
   });
 
-  showTotalExpense();
-  showHighestExpense();
+  showTotalExpense(expenses);
+  showHighestExpense(expenses);
 }
 
 expenseList.addEventListener("click", function (e) {
+
   let target = e.target;
+
+  if(!target.classList.contains("btn-delete") && !target.classList.contains("btn-edit")) {
+    return;
+  }
   let closestItem = target.closest(".expense-item");
   let clickedItemID = Number(closestItem.dataset.id);
   if (target.classList.contains("btn-delete")) {
@@ -155,7 +177,7 @@ cancelEditBtn.addEventListener("click", function (e) {
   cancelEditBtn.classList.add("hidden");
 });
 
-function showTotalExpense() {
+function showTotalExpense(expenses) {
   let total = 0;
 
   expenses.forEach((exp) => {
@@ -165,7 +187,7 @@ function showTotalExpense() {
   totalExpense.textContent = `₹${total}`;
 }
 
-function showHighestExpense() {
+function showHighestExpense(expenses) {
   let highest = 0;
 
   expenses.forEach((ele) => {
@@ -182,7 +204,8 @@ function updateDashboard(){
    const selectedCategory = categoryFilter.value;
    const sortType = sortFilter.value;
    
-   let results = expenses.filter((exp)=>{
+   let duplicateData = [...expenses]
+   let results = duplicateData.filter((exp)=>{
 
     if(searchItem !== ""){
       return exp.title.toLowerCase().includes(searchItem);
