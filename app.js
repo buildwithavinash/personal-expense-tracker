@@ -12,6 +12,11 @@ let itemToEditID = null;
 let totalExpense = document.querySelector(".total__expense");
 let highestExpense = document.querySelector(".highest__expense");
 
+//* filters 
+let categoryFilter = document.querySelector(".category__filtering--type")
+let sortFilter = document.querySelector(".category__filtering--timeline");
+let searchInput = document.querySelector(".search__input")
+
 let expenses = [
   {
     id: Date.now(),
@@ -171,3 +176,32 @@ function showHighestExpense() {
 
   highestExpense.textContent = `₹${highest}`;
 }
+
+function updateDashboard(){
+   const searchItem = searchInput.value.toLowerCase().trim();
+   const selectedCategory = categoryFilter.value;
+   const sortType = sortFilter.value;
+   
+   let results = expenses.filter((exp)=>{
+
+    if(searchItem !== ""){
+      return exp.title.toLowerCase().includes(searchItem);
+    }
+
+    return selectedCategory === "all" || exp.category === selectedCategory;
+   })
+
+   results.sort((a, b) => {
+    if (sortType === "latest") return b.id - a.id;
+    if (sortType === "oldest") return a.id - b.id;
+    if (sortType === "amount-high") return b.amount - a.amount;
+    if (sortType === "amount-low") return a.amount - b.amount;
+    return 0;
+  });
+
+  render(results);
+}
+
+searchInput.addEventListener("input", updateDashboard);
+categoryFilter.addEventListener("change", updateDashboard);
+sortFilter.addEventListener("change", updateDashboard);
