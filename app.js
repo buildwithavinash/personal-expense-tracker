@@ -8,7 +8,9 @@ let cancelEditBtn = document.querySelector(".btn-cancelEdit");
 let isEditMode = false;
 let itemToEditID = null;
 
-//* expenses : 
+//* expenses 
+let totalExpense = document.querySelector(".total__expense");
+let highestExpense = document.querySelector(".highest__expense");
 
 let expenses = [
   {
@@ -97,6 +99,8 @@ function render(expenses) {
         `;
 
     expenseList.append(li);
+    showTotalExpense();
+    showHighestExpense();
   });
 }
 
@@ -144,3 +148,27 @@ cancelEditBtn.addEventListener("click", function (e) {
 
   cancelEditBtn.classList.add("hidden");
 });
+
+function showTotalExpense(){
+  let total = 0;
+
+  expenses.forEach((exp)=>{
+    total = total + exp.amount;
+  })
+
+  totalExpense.textContent = `₹${total}`;
+}
+
+function showHighestExpense(){
+  let highest = 0;
+
+  expenses.forEach((ele)=>{
+    
+
+    if(ele.amount >= highest){
+      highest = ele.amount
+    }
+  })
+
+  highestExpense.textContent = `₹${highest}`;
+}
