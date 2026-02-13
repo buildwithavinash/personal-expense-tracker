@@ -18,19 +18,12 @@ let sortFilter = document.querySelector(".category__filtering--timeline");
 let searchInput = document.querySelector(".search__input")
  let errMsg =  document.querySelector(".error__msg");
 
-let expenses = [
-  {
-    id: Date.now(),
-    title: "Eggs",
-    amount: 345,
-    category: "Food",
-    date: new Date().toLocaleDateString("en-GB", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-    }),
-  },
-];
+let expenses = JSON.parse(localStorage.getItem("expenses")) || [];
+
+render(expenses)
+
+
+
 
 expenseForm.addEventListener("submit", function (e) {
   e.preventDefault();
@@ -49,14 +42,18 @@ expenseForm.addEventListener("submit", function (e) {
       return ele.id === itemToEditID;
     });
 
+    if(!itemToEdit) return;
+
     itemToEdit.title = expenseTitleInput.value.trim();
     itemToEdit.amount = parseFloat(expenseAmountInp.value);
     itemToEdit.category = expenseCategory.value;
+
 
     isEditMode = false;
     itemToEditID = null;
 
     addExpenseBtn.textContent = "Add Expense";
+    cancelEditBtn.classList.add("hidden");
   } else {
     let expense = {
       id: Date.now(),
@@ -74,7 +71,8 @@ expenseForm.addEventListener("submit", function (e) {
   }
 
   render(expenses);
-  expenseForm.reset();
+ localStorage.setItem("expenses", JSON.stringify(expenses));
+expenseForm.reset();
 });
 
 function render(expenses) {
@@ -104,14 +102,15 @@ function render(expenses) {
         <div class="expense-item__left">
     <div class="expense-item__info">
       <h3 class="expense-title">${exp.title}</h3>
-      <span class="expense-category ${categoryClass}">${exp.category}</span>
+      <span class="expense-category ${categoryClass}"> ${capitalize(exp.category)}</span>
     </div>
 
     <p class="expense-date">${exp.date}</p>
   </div>
 
   <div class="expense-item__right">
-    <p class="expense-amount">₹${exp.amount}</p>
+    <p class="expense-amount">₹${exp.amount.toLocaleString("en-IN")}
+</p>
 
     <div class="expense-actions">
       <button class="btn btn-edit">Edit</button>
@@ -126,6 +125,12 @@ function render(expenses) {
   showTotalExpense(expenses);
   showHighestExpense(expenses);
 }
+
+
+function capitalize(word) {
+  return word.charAt(0).toUpperCase() + word.slice(1);
+}
+
 
 expenseList.addEventListener("click", function (e) {
 
@@ -142,6 +147,8 @@ expenseList.addEventListener("click", function (e) {
     });
 
     render(expenses);
+    localStorage.setItem("expenses", JSON.stringify(expenses));
+
   }
 
   if (target.classList.contains("btn-edit")) {
