@@ -5,6 +5,7 @@ let expenseAmountInp = document.querySelector(".amount-input");
 let expenseCategory = document.querySelector(".category-options");
 let addExpenseBtn = document.querySelector(".btn-add");
 let cancelEditBtn = document.querySelector(".btn-cancelEdit");
+let clearBtn = document.querySelector(".btn-clear");
 let isEditMode = false;
 let itemToEditID = null;
 
@@ -77,6 +78,9 @@ expenseForm.reset();
 
 function render(expenses) {
   expenseList.innerHTML = "";
+
+
+  clearBtn.style.display = expenses.length === 0 ? "none" : "inline-block";
 
   document.querySelector(".empty-state").style.display =
     expenses.length === 0 ? "block" : "none";
@@ -236,9 +240,11 @@ searchInput.addEventListener("input", updateDashboard);
 categoryFilter.addEventListener("change", updateDashboard);
 sortFilter.addEventListener("change", updateDashboard);
 
-let clearBtn = document.querySelector(".btn-clear");
 
-clearBtn.addEventListener("click", function () {
+
+
+if (clearBtn) {
+  clearBtn.addEventListener("click", function () {
   
   const confirmClear = confirm("Delete all expenses?");
 
@@ -250,3 +256,6 @@ clearBtn.addEventListener("click", function () {
 
   localStorage.removeItem("expenses");
 });
+}
+
+
