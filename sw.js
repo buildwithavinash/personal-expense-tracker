@@ -1,10 +1,10 @@
-const CACHE_NAME = "finance-app-v1";
+const CACHE_NAME = "finance-app-v2";
 
 const urlsToCache = [
-  "./",
-  "./index.html",
-  "./style.css",
-  "./app.js"
+  "/",
+  "/index.html",
+  "/style.css",
+  "/app.js"
 ];
 
 self.addEventListener("install", event => {
