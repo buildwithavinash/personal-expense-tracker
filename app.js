@@ -235,3 +235,18 @@ function updateDashboard(){
 searchInput.addEventListener("input", updateDashboard);
 categoryFilter.addEventListener("change", updateDashboard);
 sortFilter.addEventListener("change", updateDashboard);
+
+let clearBtn = document.querySelector(".btn-clear");
+
+clearBtn.addEventListener("click", function () {
+  
+  const confirmClear = confirm("Delete all expenses?");
+
+  if (!confirmClear) return;
+
+  expenses = [];
+
+  render(expenses);
+
+  localStorage.removeItem("expenses");
+});
