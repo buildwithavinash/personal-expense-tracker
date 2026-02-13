@@ -79,49 +79,70 @@ expenseForm.reset();
 function render(expenses) {
   expenseList.innerHTML = "";
 
-
   clearBtn.style.display = expenses.length === 0 ? "none" : "inline-block";
 
   document.querySelector(".empty-state").style.display =
     expenses.length === 0 ? "block" : "none";
 
-  expenses.forEach((exp) => {
-    let li = document.createElement("li");
+  expenses.forEach(exp => {
+
+    const li = document.createElement("li");
     li.classList.add("expense-item");
     li.dataset.id = exp.id;
-    let categoryType = exp.category.toLowerCase();
-    let categoryClass = null
-    if(categoryType === "food"){
-      categoryClass = "category-food";
-    }else if(categoryType === "travel"){
-      categoryClass = "category-travel";
-    }else if(categoryType === "shopping"){
-      categoryClass = "category-shopping";
-    }else if(categoryType === "other"){
-      categoryClass = "category-other";
-    }
 
+    // LEFT SECTION
+    const leftDiv = document.createElement("div");
+    leftDiv.classList.add("expense-item__left");
 
-    li.innerHTML = `
-        <div class="expense-item__left">
-    <div class="expense-item__info">
-      <h3 class="expense-title">${exp.title}</h3>
-      <span class="expense-category ${categoryClass}"> ${capitalize(exp.category)}</span>
-    </div>
+    const infoDiv = document.createElement("div");
+    infoDiv.classList.add("expense-item__info");
 
-    <p class="expense-date">${exp.date}</p>
-  </div>
+    const title = document.createElement("h3");
+    title.classList.add("expense-title");
+    title.textContent = exp.title;   // ✅ SAFE
 
-  <div class="expense-item__right">
-    <p class="expense-amount">₹${exp.amount.toLocaleString("en-IN")}
-</p>
+    const category = document.createElement("span");
+    category.classList.add("expense-category");
 
-    <div class="expense-actions">
-      <button class="btn btn-edit">Edit</button>
-      <button class="btn btn-delete">Delete</button>
-    </div>
-  </div>
-        `;
+    const categoryType = exp.category.toLowerCase();
+    if (categoryType === "food") category.classList.add("category-food");
+    else if (categoryType === "travel") category.classList.add("category-travel");
+    else if (categoryType === "shopping") category.classList.add("category-shopping");
+    else category.classList.add("category-other");
+
+    category.textContent = capitalize(exp.category); // ✅ SAFE
+
+    infoDiv.append(title, category);
+
+    const date = document.createElement("p");
+    date.classList.add("expense-date");
+    date.textContent = exp.date;
+
+    leftDiv.append(infoDiv, date);
+
+    // RIGHT SECTION
+    const rightDiv = document.createElement("div");
+    rightDiv.classList.add("expense-item__right");
+
+    const amount = document.createElement("p");
+    amount.classList.add("expense-amount");
+    amount.textContent = `₹${exp.amount.toLocaleString("en-IN")}`;
+
+    const actionsDiv = document.createElement("div");
+    actionsDiv.classList.add("expense-actions");
+
+    const editBtn = document.createElement("button");
+    editBtn.classList.add("btn", "btn-edit");
+    editBtn.textContent = "Edit";
+
+    const deleteBtn = document.createElement("button");
+    deleteBtn.classList.add("btn", "btn-delete");
+    deleteBtn.textContent = "Delete";
+
+    actionsDiv.append(editBtn, deleteBtn);
+    rightDiv.append(amount, actionsDiv);
+
+    li.append(leftDiv, rightDiv);
 
     expenseList.append(li);
   });
@@ -129,6 +150,7 @@ function render(expenses) {
   showTotalExpense(expenses);
   showHighestExpense(expenses);
 }
+
 
 
 function capitalize(word) {
